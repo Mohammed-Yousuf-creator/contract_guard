@@ -45,6 +45,7 @@ export const UploadPage: React.FC = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(-1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [completedAnalysis, setCompletedAnalysis] = useState<Awaited<ReturnType<typeof contractsService.triggerAnalysis>> | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data: contractsData } = useQuery({
@@ -107,7 +108,8 @@ export const UploadPage: React.FC = () => {
       }
 
       // Step 6: Trigger AI compliance scan
-      await contractsService.triggerAnalysis(selectedContract);
+      const analysis = await contractsService.triggerAnalysis(selectedContract);
+      setCompletedAnalysis(analysis);
       setCurrentStepIndex(5);
       setIsComplete(true);
 
@@ -163,7 +165,7 @@ export const UploadPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => navigate(`/contracts/${selectedContract}`)}
+              onClick={() => navigate(`/contracts/${selectedContract}`, { state: { analysis: completedAnalysis } })}
             >
               <span>Inspect Updated Contract</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1.5" />

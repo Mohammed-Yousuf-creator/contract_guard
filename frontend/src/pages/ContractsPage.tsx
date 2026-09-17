@@ -89,7 +89,12 @@ export const ContractsPage: React.FC = () => {
     } else {
       const createdContract = await createMutation.mutateAsync(formData);
       if (file) {
-        await documentsService.uploadDocument(createdContract.id, file, 'BASELINE');
+        try {
+          await documentsService.uploadDocument(createdContract.id, file, 'BASELINE');
+        } catch (error) {
+          setEditingContract(createdContract);
+          throw error;
+        }
       }
     }
     queryClient.invalidateQueries({ queryKey: ['contracts'] });

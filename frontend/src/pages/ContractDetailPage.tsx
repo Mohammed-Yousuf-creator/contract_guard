@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { contractsService } from '@/services/contracts.service';
 import { documentsService } from '@/services/documents.service';
@@ -34,13 +34,16 @@ import { getStatusBadgeClasses, formatDate } from '@/lib/utils';
 export const ContractDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedFactor, setSelectedFactor] = useState<string | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [analysisStatusMessage, setAnalysisStatusMessage] = useState<string | null>(null);
-  const [latestAnalysis, setLatestAnalysis] = useState<import('@/types/change').ContractAnalysisResult | null>(null);
+  const [latestAnalysis, setLatestAnalysis] = useState<import('@/types/change').ContractAnalysisResult | null>(
+    (location.state as { analysis?: import('@/types/change').ContractAnalysisResult } | null)?.analysis || null
+  );
 
   // Queries
   const { data: contract, isLoading: isContractLoading } = useQuery({

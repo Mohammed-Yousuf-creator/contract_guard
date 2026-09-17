@@ -202,7 +202,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
           <input
             ref={fileInputRef}
             type="file"
-            accept=".pdf,.doc,.docx,.png,.jpg"
+            accept=".pdf,.docx,.png,.jpg,.jpeg"
             onChange={(event) => setFile(event.target.files?.[0] || null)}
             className="hidden"
             disabled={isLoading}

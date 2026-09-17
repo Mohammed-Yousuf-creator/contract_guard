@@ -14,14 +14,10 @@ export const documentsService = {
     contractId: string,
     file: File,
     documentType: DocumentType,
-    versionNumber?: number
   ): Promise<Document> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('document_type', documentType);
-    if (versionNumber !== undefined && versionNumber !== null) {
-      formData.append('version_number', versionNumber.toString());
-    }
 
     return apiClient<Document>(`/contracts/${contractId}/documents`, {
       method: 'POST',
